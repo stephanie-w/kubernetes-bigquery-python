@@ -34,7 +34,7 @@ access_token = os.environ['ACCESSTOKEN']
 access_token_secret = os.environ['ACCESSTOKENSEC']
 
 PUBSUB_TOPIC = os.environ['PUBSUB_TOPIC']
-NUM_RETRIES = 3
+NUM_RETRIES = int(os.environ['NUM_RETRIES'])
 
 
 def publish(client, pubsub_topic, data_lines):
@@ -57,15 +57,17 @@ class StdOutListener(StreamListener):
     count = 0
     twstring = ''
     tweets = []
-    batch_size = 50
-    total_tweets = 10000000
+    batch_size = int(os.environ['BATCH_SIZE'])
+    total_tweets = int(os.environ['TOTAL_TWEETS'])
     client = utils.create_pubsub_client(utils.get_credentials())
 
     def write_to_pubsub(self, tw):
+        print "publishing %s tweets" % len(tw)
         publish(self.client, PUBSUB_TOPIC, tw)
 
     def on_data(self, data):
         """What to do when tweet data is received."""
+        print "Receiving data: %s" % data
         self.tweets.append(data)
         if len(self.tweets) >= self.batch_size:
             self.write_to_pubsub(self.tweets)

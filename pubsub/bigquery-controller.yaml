@@ -13,18 +13,9 @@ spec:
     spec:
       containers:
       - name: bigquery
-        image: gcr.io/google-samples/pubsub-bq-pipe:v5
-        env:
-        - name: PROCESSINGSCRIPT
-          value: pubsub-to-bigquery
-        # Change this to your pubsub topic
-        - name: PUBSUB_TOPIC
-          value: projects/your-project/topics/your-topic
-        # Change this to your project ID.
-        - name: PROJECT_ID
-          value: xxxx
-        # Change the following two settings to your dataset and table.
-        - name: BQ_DATASET
-          value: xxxx
-        - name: BQ_TABLE
-          value: xxxx
+        image: lisptick/pubsub_pipeline
+        command : ["python", "controller.py"]
+        args: ["pubsub-to-bigquery"]
+        envFrom:
+          - configMapRef:
+              name: tw-conf

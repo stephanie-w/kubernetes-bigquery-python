@@ -18,8 +18,10 @@ on an environment variable.
 """
 
 import os
+import sys
 
-script = os.environ['PROCESSINGSCRIPT']
+
+script = sys.argv[1]
 
 if script == 'pubsub-to-bigquery':
     os.system("python pubsub-to-bigquery.py")
